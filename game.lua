@@ -127,22 +127,14 @@ function _draw()
   rectfill(0, 0, 127, 127, 4)
   rectfill(GRID_OFFSET_X, GRID_OFFSET_Y, GRID_OFFSET_X + GRID_WIDTH * CELL_WIDTH, GRID_OFFSET_Y + GRID_HEIGHT * CELL_HEIGHT, 15)
 
-  --[[for i = 1, GRID_WIDTH + 1 do
-    local x = GRID_OFFSET_X + (i - 1) * CELL_WIDTH
-    for j = 1, GRID_HEIGHT + 1 do
-      local y = GRID_OFFSET_Y + (j - 1) * CELL_HEIGHT
-      --line(x, GRID_OFFSET_Y, x, GRID_OFFSET_Y + CELL_HEIGHT * GRID_HEIGHT, 9) -- vertical lines
-      --line(GRID_OFFSET_X, y, GRID_OFFSET_X + CELL_WIDTH * GRID_WIDTH, y, 9) -- horizontal lines
-    end
-  end]]
   for i = 1, GRID_WIDTH do
     local x = GRID_OFFSET_X + (i - 1) * CELL_WIDTH
     for j = 1, GRID_HEIGHT do
       local y = GRID_OFFSET_Y + (j - 1) * CELL_HEIGHT
       -- Visualize the generated path to the goal.
-      if path[i][j] then
-        rectfill(x, y, x + CELL_WIDTH, y + CELL_HEIGHT, 6)
-      end
+      --if path[i][j] then
+      --  rectfill(x, y, x + CELL_WIDTH, y + CELL_HEIGHT, 6)
+      --end
 
       if grid[i][j] == SOLID_FIELD then
         -- rect(x, y, x + CELL_WIDTH, y + CELL_HEIGHT, 0)
