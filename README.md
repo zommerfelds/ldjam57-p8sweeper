@@ -7,7 +7,7 @@ todo: screenshot
 ## Tasks
 
 - [x] Draw base grid with numbers
-- [ ] Mouse click
+- [x] Mouse click
 - [ ] Hide invisible numbers
 - [ ] Click to uncover
 - [ ] Flag mines
