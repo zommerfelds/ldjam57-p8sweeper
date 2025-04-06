@@ -3,6 +3,8 @@ version 42
 __lua__
 #include font.lua
 #include generator.lua
+#include scene_level.lua
+#include scene_menu.lua
 #include game.lua
 
 __gfx__

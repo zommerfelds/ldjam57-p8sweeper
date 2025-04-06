@@ -14,18 +14,21 @@ visibility = {}
 flags = {}
 path = {}
 flipped = {}
-for i = 1, GRID_WIDTH do
-    grid[i] = {}
-    visibility[i] = {}
-    flags[i] = {}
-    path[i] = {}
-    flipped[i] = {}
-    for j = 1, GRID_HEIGHT do
-        grid[i][j] = EMPTY_FIELD -- Default all fields to empty
-        visibility[i][j] = false -- Default all fields to covered
-        flags[i][j] = false -- Default all fields to unflagged
-        path[i][j] = false -- Default all fields to not in path
-        flipped[i][j] = { x = rnd() > 0.5, y = rnd() > 0.5 } -- Randomize x and y as booleans
+
+function reset_grid()
+    for i = 1, GRID_WIDTH do
+        grid[i] = {}
+        visibility[i] = {}
+        flags[i] = {}
+        path[i] = {}
+        flipped[i] = {}
+        for j = 1, GRID_HEIGHT do
+            grid[i][j] = EMPTY_FIELD -- Default all fields to empty
+            visibility[i][j] = false -- Default all fields to covered
+            flags[i][j] = false -- Default all fields to unflagged
+            path[i][j] = false -- Default all fields to not in path
+            flipped[i][j] = { x = rnd() > 0.5, y = rnd() > 0.5 } -- Randomize x and y as booleans
+        end
     end
 end
 
@@ -52,8 +55,6 @@ function find_random_path(grid)
     end
 end
 
-find_random_path(grid)
-
 function place_random_mines(grid, mine_count)
     for _ = 1, mine_count do
         local x, y
@@ -64,8 +65,6 @@ function place_random_mines(grid, mine_count)
         grid[x][y] = MINE_FIELD
     end
 end
-
-place_random_mines(grid, 45)
 
 function place_random_solids(grid, solid_count)
     for _ = 1, solid_count do
@@ -78,8 +77,6 @@ function place_random_solids(grid, solid_count)
         -- visibility[x][y] = true
     end
 end
-
-place_random_solids(grid, 20)
 
 function calculate_neighbors(grid)
     local neighbors = {}
@@ -115,4 +112,10 @@ function calculate_neighbors(grid)
     return neighbors
 end
 
-neighbor_counts = calculate_neighbors(grid)
+function generate_level()
+    reset_grid()
+    find_random_path(grid)
+    place_random_mines(grid, 45)
+    place_random_solids(grid, 20)
+    neighbor_counts = calculate_neighbors(grid)
+end
