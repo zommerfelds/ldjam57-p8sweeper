@@ -1,0 +1,6 @@
+{
+  "editor.defaultFormatter": null,
+  "[lua]": {
+    "editor.defaultFormatter": "PollywogGames.pico8-ls"
+  }
+}
