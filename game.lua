@@ -3,6 +3,22 @@ grid_offset_y = 10
 grid_width = 8
 grid_height = 8
 
+function draw_number(grid_x, grid_y, number)
+  local fnumber = flr(number)
+  local x = grid_offset_x + grid_x * grid_width + 3
+  local y = grid_offset_y + grid_y * grid_height + 2
+  if number == 0 then return end
+  if number == 0.5 then
+    sspr(3 * 7, 0, 1, 5, x + 1, y) -- draw the half symbol in the middle
+    return
+  end
+  if fnumber != number then
+    x -= 1
+    sspr(3 * 7, 0, 1, 5, x + 4, y) -- draw the half symbol
+  end
+  sspr(3 * fnumber, 0, 3, 5, x, y)
+end
+
 function _init()
   -- white is transparent
   palt(0B0000000100000000)
@@ -26,13 +42,10 @@ function _draw()
     end
   end
 
-  for i = 0, 10 do
+  for i = 0, 6 do
     draw_number(i, i, i)
   end
-end
-
-function draw_number(grid_x, grid_y, number)
-  local x = grid_offset_x + grid_x * grid_width + 4
-  local y = grid_offset_y + grid_y * grid_height + 2
-  sspr(3 * number, 0, 3, 5, x, y)
+  for i = 0, 6 do
+    draw_number(6 - i + 1, i, i + 0.5)
+  end
 end
