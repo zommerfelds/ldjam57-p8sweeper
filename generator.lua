@@ -9,18 +9,20 @@ EMPTY_FIELD = 0
 SOLID_FIELD = 1
 MINE_FIELD = 2
 
--- Initialize the grid
 grid = {}
 visibility = {}
 flags = {}
+path = {}
 for i = 1, GRID_WIDTH do
     grid[i] = {}
     visibility[i] = {}
     flags[i] = {}
+    path[i] = {}
     for j = 1, GRID_HEIGHT do
         grid[i][j] = EMPTY_FIELD -- Default all fields to empty
         visibility[i][j] = false -- Default all fields to covered
         flags[i][j] = false -- Default all fields to unflagged
+        path[i][j] = false -- Default all fields to not in path
     end
 end
 
@@ -29,8 +31,25 @@ local start_y = 1
 
 function is_in_start_area(x, y)
     return (x >= start_x - 1 and x <= start_x + 1)
-            and (y >= start_y and y <= start_y + 2)
+            and (y >= start_y and y <= start_y + 1)
 end
+
+function find_random_path(grid)
+    local x, y = start_x, start_y
+    path[x][y] = true
+    while y < GRID_HEIGHT do
+        local moves = {}
+        if x > 1 then add(moves, { x - 1, y }) end -- Left
+        if x < GRID_WIDTH then add(moves, { x + 1, y }) end -- Right
+        if y < GRID_HEIGHT then add(moves, { x, y + 1 }) end -- Down
+
+        local next_move = moves[flr(rnd(#moves)) + 1]
+        x, y = next_move[1], next_move[2]
+        path[x][y] = true -- Mark the path
+    end
+end
+
+find_random_path(grid)
 
 function place_random_mines(grid, mine_count)
     for _ = 1, mine_count do
@@ -38,35 +57,36 @@ function place_random_mines(grid, mine_count)
         repeat
             x = flr(rnd(GRID_WIDTH)) + 1
             y = flr(rnd(GRID_HEIGHT)) + 1
-        until grid[x][y] == EMPTY_FIELD and not is_in_start_area(x, y)
+        until grid[x][y] == EMPTY_FIELD and not path[x][y] and not is_in_start_area(x, y)
         grid[x][y] = MINE_FIELD
     end
 end
 
--- Place 10 random mines
-place_random_mines(grid, 50)
+place_random_mines(grid, 35)
 
--- Function to place random solid fields
 function place_random_solids(grid, solid_count)
     for _ = 1, solid_count do
         local x, y
         repeat
             x = flr(rnd(GRID_WIDTH)) + 1
             y = flr(rnd(GRID_HEIGHT)) + 1
-        until grid[x][y] == EMPTY_FIELD -- Ensure the field is empty
+        until grid[x][y] == EMPTY_FIELD and not path[x][y]
         grid[x][y] = SOLID_FIELD
     end
 end
 
--- Place 5 random solid fields
 place_random_solids(grid, 20)
 
--- Function to calculate neighboring mines
 function calculate_neighbors(grid)
     local neighbors = {}
     for i = 1, GRID_WIDTH do
         neighbors[i] = {}
         for j = 1, GRID_HEIGHT do
+            -- Maybe we should do this in a separate function...
+            if is_in_start_area(i, j) then
+                visibility[i][j] = true -- Uncover the start area
+            end
+
             local count = 0
             -- Check all adjacent cells
             for dx = -1, 1 do
@@ -91,5 +111,4 @@ function calculate_neighbors(grid)
     return neighbors
 end
 
--- Calculate neighbors for the current grid
 neighbor_counts = calculate_neighbors(grid)

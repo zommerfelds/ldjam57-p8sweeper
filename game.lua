@@ -125,6 +125,10 @@ function _draw()
       line(x, GRID_OFFSET_Y, x, GRID_OFFSET_Y + CELL_HEIGHT * GRID_HEIGHT, 5) -- vertical lines
       line(GRID_OFFSET_X, y, GRID_OFFSET_X + CELL_WIDTH * GRID_WIDTH, y, 5) -- horizontal lines
       if i <= GRID_WIDTH and j <= GRID_HEIGHT then
+        --if path[i][j] then
+        --  rectfill(x, y, x + CELL_WIDTH, y + CELL_HEIGHT, 6)
+        --end
+
         if grid[i][j] == SOLID_FIELD then
           spr(17, x + 1, y + 1)
         else
