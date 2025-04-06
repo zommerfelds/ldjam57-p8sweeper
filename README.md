@@ -11,7 +11,7 @@ todo: screenshot
 - [x] Hide invisible numbers
 - [x] Click to uncover
 - [x] Flag mines
-- [ ] Win and lose condition
+- [x] Win and lose condition
 - [ ] Make puzzle generation better (solvable)
 - [ ] Better graphics like mockup (e.g. don't draw grid in uncovered land)
 - [ ] Sound
