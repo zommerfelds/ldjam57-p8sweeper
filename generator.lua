@@ -19,37 +19,32 @@ for i = 1, GRID_WIDTH do
     flags[i] = {}
     for j = 1, GRID_HEIGHT do
         grid[i][j] = EMPTY_FIELD -- Default all fields to empty
-        visibility[i][j] = false -- Default all fields to covered (not uncovered)
+        visibility[i][j] = false -- Default all fields to covered
         flags[i][j] = false -- Default all fields to unflagged
     end
 end
 
--- Function to place random mines
+local start_x = flr((GRID_WIDTH + 1) / 2)
+local start_y = 1
+
+function is_in_start_area(x, y)
+    return (x >= start_x - 1 and x <= start_x + 1)
+            and (y >= start_y and y <= start_y + 2)
+end
+
 function place_random_mines(grid, mine_count)
     for _ = 1, mine_count do
         local x, y
         repeat
             x = flr(rnd(GRID_WIDTH)) + 1
             y = flr(rnd(GRID_HEIGHT)) + 1
-        until grid[x][y] == EMPTY_FIELD -- Ensure the field is empty
+        until grid[x][y] == EMPTY_FIELD and not is_in_start_area(x, y)
         grid[x][y] = MINE_FIELD
     end
 end
 
 -- Place 10 random mines
 place_random_mines(grid, 50)
-
--- Uncover a 3x3 area at the top middle of the grid
-local start_x = flr(GRID_WIDTH / 2)
-local start_y = 1
-for i = start_x, start_x + 2 do
-    for j = start_y, start_y + 2 do
-        visibility[i][j] = true
-        if grid[i][j] == MINE_FIELD then
-            grid[i][j] = EMPTY_FIELD -- Ensure no mines in this area
-        end
-    end
-end
 
 -- Function to place random solid fields
 function place_random_solids(grid, solid_count)
