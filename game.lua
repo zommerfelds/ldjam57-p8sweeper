@@ -97,13 +97,55 @@ function draw_number(grid_x, grid_y, number)
   sspr(3 * fnumber, 0, 3, 5, x, y)
 end
 
+-- Function to convert mouse coordinates to grid coordinates
+function mouse_to_grid(mx, my)
+  local gx = flr((mx - GRID_OFFSET_X) / CELL_WIDTH) + 1
+  local gy = flr((my - GRID_OFFSET_Y) / CELL_HEIGHT) + 1
+  if gx >= 1 and gx <= GRID_WIDTH and gy >= 1 and gy <= GRID_HEIGHT then
+    return gx, gy
+  else
+    return nil, nil -- Mouse is outside the grid
+  end
+end
+
+function draw_mouse_sprite()
+  local mx, my = stat(32), stat(33)
+  spr(32, mx, my)
+end
+
+function log(text)
+  printh(text, "mylog.txt")
+end
+
+-- Track the previous mouse button state
+prev_mouse_state = 0
+
 function _init()
+  log("\n--- Starting game! ---\n")
   -- white is transparent
   palt(0B0000000100000000)
+  -- Enable the hardware mouse cursor
+  poke(0x5f2d, 1)
 end
 
 function _update()
-  -- press x for a random colour
+  -- Get the current mouse button state
+  local mouse_state = stat(34)
+  -- 1 if pressed, 0 if not pressed
+
+  -- Detect a single click (button pressed but wasn't pressed before)
+  if mouse_state == 1 and prev_mouse_state == 0 then
+    local mx, my = stat(32), stat(33) -- Get mouse x and y positions
+    local gx, gy = mouse_to_grid(mx, my)
+    if gx and gy then
+      printh("Mouse clicked on grid: (" .. gx .. ", " .. gy .. ")", "mylog.txt")
+    end
+  end
+
+  -- Update the previous mouse state
+  prev_mouse_state = mouse_state
+
+  -- Press x for a random color
   if (btnp(5)) col = 8 + rnd(8)
 end
 
@@ -128,4 +170,6 @@ function _draw()
       end
     end
   end
+
+  draw_mouse_sprite()
 end

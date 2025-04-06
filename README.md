@@ -6,6 +6,7 @@ todo: screenshot
 
 ## Tasks
 
+- [x] Draw base grid with numbers
 - [ ] Mouse click
 - [ ] Hide invisible numbers
 - [ ] Click to uncover
@@ -25,3 +26,5 @@ Export zip: first run vscode task, then:
 ```
 "C:\Program Files\7-Zip\7z.exe" a -tzip export/web.zip ./export/index.html ./export/index.js
 ```
+
+To see debug logs, type "folder" in PICO-8 and open the mylog.txt file.
