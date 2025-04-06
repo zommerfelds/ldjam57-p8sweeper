@@ -8,10 +8,12 @@ todo: screenshot
 
 - [x] Draw base grid with numbers
 - [x] Mouse click
-- [ ] Hide invisible numbers
-- [ ] Click to uncover
+- [x] Hide invisible numbers
+- [x] Click to uncover
 - [ ] Flag mines
+- [ ] Win condition
 - [ ] Make puzzle generation better (solvable)
+- [ ] Better graphics like mockup (e.g. don't draw grid in uncovered land)
 - [ ] Sound
 - [ ] Levels (depth indicator)
 - [ ] Exploration animation

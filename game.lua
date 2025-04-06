@@ -19,6 +19,15 @@ for i = 1, GRID_WIDTH do
   end
 end
 
+-- Initialize the visibility state of the grid
+visibility = {}
+for i = 1, GRID_WIDTH do
+  visibility[i] = {}
+  for j = 1, GRID_HEIGHT do
+    visibility[i][j] = false -- Default all fields to covered (not uncovered)
+  end
+end
+
 -- Function to place random mines
 function place_random_mines(grid, mine_count)
   for _ = 1, mine_count do
@@ -33,6 +42,18 @@ end
 
 -- Place 10 random mines
 place_random_mines(grid, 20)
+
+-- Uncover a 3x3 area at the top middle of the grid
+local start_x = flr(GRID_WIDTH / 2)
+local start_y = 1
+for i = start_x, start_x + 2 do
+  for j = start_y, start_y + 2 do
+    visibility[i][j] = true
+    if grid[i][j] == MINE_FIELD then
+      grid[i][j] = EMPTY_FIELD -- Ensure no mines in this area
+    end
+  end
+end
 
 -- Function to place random solid fields
 function place_random_solids(grid, solid_count)
@@ -61,7 +82,8 @@ function calculate_neighbors(grid)
         for dy = -1, 1 do
           local ni = i + dx
           local nj = j + dy
-          if ni >= 1 and ni <= 8 and nj >= 1 and nj <= 8 and (dx != 0 or dy != 0) then
+          if ni >= 1 and ni <= GRID_WIDTH and nj >= 1 and nj <= GRID_HEIGHT
+              and (dx != 0 or dy != 0) then
             if grid[ni][nj] == MINE_FIELD then
               if dx == 0 or dy == 0 then
                 count += 1 -- Directly adjacent
@@ -134,11 +156,17 @@ function _update()
   -- 1 if pressed, 0 if not pressed
 
   -- Detect a single click (button pressed but wasn't pressed before)
-  if mouse_state == 1 and prev_mouse_state == 0 then
+  if mouse_state == 1 then
+    -- and prev_mouse_state == 0 then
     local mx, my = stat(32), stat(33) -- Get mouse x and y positions
     local gx, gy = mouse_to_grid(mx, my)
     if gx and gy then
       printh("Mouse clicked on grid: (" .. gx .. ", " .. gy .. ")", "mylog.txt")
+      visibility[gx][gy] = true -- Uncover the clicked cell
+      if grid[gx][gy] == MINE_FIELD then
+        --TODO Game over logic here (e.g., show game over screen)
+        log("Game Over! You clicked on a mine!")
+      end
     end
   end
 
@@ -160,12 +188,18 @@ function _draw()
       line(x, GRID_OFFSET_Y, x, GRID_OFFSET_Y + CELL_HEIGHT * GRID_HEIGHT, 5) -- vertical lines
       line(GRID_OFFSET_X, y, GRID_OFFSET_X + CELL_WIDTH * GRID_WIDTH, y, 5) -- horizontal lines
       if i <= GRID_WIDTH and j <= GRID_HEIGHT then
-        if grid[i][j] == MINE_FIELD then
-          spr(16, x + 1, y + 1)
-        elseif grid[i][j] == SOLID_FIELD then
+        if grid[i][j] == SOLID_FIELD then
           spr(17, x + 1, y + 1)
         else
-          draw_number(i, j, neighbor_counts[i][j])
+          if visibility[i][j] then
+            if grid[i][j] == MINE_FIELD then
+              spr(16, x + 1, y + 1)
+            else
+              draw_number(i, j, neighbor_counts[i][j])
+            end
+          else
+            rectfill(x + 1, y + 1, x + CELL_WIDTH - 1, y + CELL_HEIGHT - 1, 4)
+          end
         end
       end
     end
