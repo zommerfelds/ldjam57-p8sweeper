@@ -126,6 +126,19 @@ function _draw()
   cls(1)
   rectfill(0, 0, 127, 127, 4)
   rectfill(GRID_OFFSET_X, GRID_OFFSET_Y, GRID_OFFSET_X + GRID_WIDTH * CELL_WIDTH, GRID_OFFSET_Y + GRID_HEIGHT * CELL_HEIGHT, 15)
+  rectfill(
+    GRID_OFFSET_X + CELL_WIDTH * (start_x - 2), 0,
+    GRID_OFFSET_X + CELL_WIDTH * (start_x + 1), GRID_OFFSET_Y,
+    15
+  )
+  line(
+    GRID_OFFSET_X + CELL_WIDTH * (start_x - 2), 0,
+    GRID_OFFSET_X + CELL_WIDTH * (start_x - 2), GRID_OFFSET_Y, 0
+  )
+  line(
+    GRID_OFFSET_X + CELL_WIDTH * (start_x + 1), 0,
+    GRID_OFFSET_X + CELL_WIDTH * (start_x + 1), GRID_OFFSET_Y, 0
+  )
 
   for i = 1, GRID_WIDTH do
     local x = GRID_OFFSET_X + (i - 1) * CELL_WIDTH
