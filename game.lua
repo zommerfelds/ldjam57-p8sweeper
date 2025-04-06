@@ -95,6 +95,13 @@ function _update()
         visibility[gx][gy] = true -- Uncover the clicked cell
         if grid[gx][gy] == MINE_FIELD then
           win_state = GAME_OVER
+            for x = 1, GRID_WIDTH do
+            for y = 1, GRID_HEIGHT do
+              if grid[x][y] == MINE_FIELD then
+              visibility[x][y] = true
+              end
+            end
+            end
         end
       end
     end
