@@ -150,8 +150,13 @@ function draw_mouse_sprite()
   spr(32, mx, my)
 end
 
+if stat(6) == 'debug' then
+  write_to_file = true
+end
 function log(text)
-  printh(text, "mylog.txt")
+  if write_to_file then
+    printh(text, "mylog.txt")
+  end
 end
 
 -- Track the previous mouse button state
@@ -187,7 +192,6 @@ function _update()
   -- Left click
   if mouse_state == 1 then
     if gx and gy then
-      printh("Mouse clicked on grid: (" .. gx .. ", " .. gy .. ")", "mylog.txt")
       flags[gx][gy] = false
       -- Check if there is a directly adjacent uncovered cell (only vertical and horizontal)
       local can_uncover = false
@@ -203,9 +207,9 @@ function _update()
 
       if can_uncover then
         visibility[gx][gy] = true -- Uncover the clicked cell
-      end
-      if grid[gx][gy] == MINE_FIELD then
-        win_state = GAME_OVER
+        if grid[gx][gy] == MINE_FIELD then
+          win_state = GAME_OVER
+        end
       end
     end
   end
@@ -214,7 +218,6 @@ function _update()
   if mouse_state == 2 and prev_mouse_state == 0 then
     if gx and gy and not visibility[gx][gy] then
       flags[gx][gy] = not flags[gx][gy] -- Toggle flag state
-      printh("Flag toggled on grid: (" .. gx .. ", " .. gy .. ")", "mylog.txt")
     end
   end
 
@@ -265,4 +268,3 @@ function _draw()
 
   draw_mouse_sprite()
 end
-
