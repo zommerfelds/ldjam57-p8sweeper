@@ -20,4 +20,8 @@ todo: screenshot
 
 To deploy a new version: `bash deploy.sh`
 
-Export zip: first run vscode task, then `tar -cf export/web.zip export/index.html export/index.js`
+Export zip: first run vscode task, then:
+
+```
+"C:\Program Files\7-Zip\7z.exe" a -tzip export/web.zip ./export/index.html ./export/index.js
+```
