@@ -10,7 +10,7 @@ todo: screenshot
 - [x] Mouse click
 - [x] Hide invisible numbers
 - [x] Click to uncover
-- [ ] Flag mines
+- [x] Flag mines
 - [ ] Win condition
 - [ ] Make puzzle generation better (solvable)
 - [ ] Better graphics like mockup (e.g. don't draw grid in uncovered land)

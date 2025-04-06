@@ -28,6 +28,15 @@ for i = 1, GRID_WIDTH do
   end
 end
 
+-- Initialize the flags state of the grid
+flags = {}
+for i = 1, GRID_WIDTH do
+  flags[i] = {}
+  for j = 1, GRID_HEIGHT do
+    flags[i][j] = false -- Default all fields to unflagged
+  end
+end
+
 -- Function to place random mines
 function place_random_mines(grid, mine_count)
   for _ = 1, mine_count do
@@ -153,33 +162,38 @@ end
 function _update()
   -- Get the current mouse button state
   local mouse_state = stat(34)
-  -- 1 if pressed, 0 if not pressed
+  local mx, my = stat(32), stat(33)
+  -- Get mouse x and y positions
+  local gx, gy = mouse_to_grid(mx, my)
 
-  -- Detect a single click (button pressed but wasn't pressed before)
+  -- Left click
   if mouse_state == 1 then
     -- and prev_mouse_state == 0 then
-    local mx, my = stat(32), stat(33) -- Get mouse x and y positions
-    local gx, gy = mouse_to_grid(mx, my)
     if gx and gy then
       printh("Mouse clicked on grid: (" .. gx .. ", " .. gy .. ")", "mylog.txt")
+      flags[gx][gy] = false -- Remove flag if it was set
       visibility[gx][gy] = true -- Uncover the clicked cell
       if grid[gx][gy] == MINE_FIELD then
-        --TODO Game over logic here (e.g., show game over screen)
+        -- TODO: Game over logic here (e.g., show game over screen)
         log("Game Over! You clicked on a mine!")
       end
     end
   end
 
+  -- Right click
+  if mouse_state == 2 and prev_mouse_state == 0 then
+    if gx and gy and not visibility[gx][gy] then
+      flags[gx][gy] = not flags[gx][gy] -- Toggle flag state
+      printh("Flag toggled on grid: (" .. gx .. ", " .. gy .. ")", "mylog.txt")
+    end
+  end
+
   -- Update the previous mouse state
   prev_mouse_state = mouse_state
-
-  -- Press x for a random color
-  if (btnp(5)) col = 8 + rnd(8)
 end
 
 function _draw()
   cls(1)
-  --rectfill(0, 0, 127, 127, 2)
   rectfill(GRID_OFFSET_X, GRID_OFFSET_Y, GRID_OFFSET_X + GRID_WIDTH * CELL_WIDTH, GRID_OFFSET_Y + GRID_HEIGHT * CELL_HEIGHT, 15)
   for i = 1, GRID_WIDTH + 1 do
     local x = GRID_OFFSET_X + (i - 1) * CELL_WIDTH
@@ -199,6 +213,9 @@ function _draw()
             end
           else
             rectfill(x + 1, y + 1, x + CELL_WIDTH - 1, y + CELL_HEIGHT - 1, 4)
+            if flags[i][j] then
+              spr(18, x + 1, y + 1) -- Draw flag sprite
+            end
           end
         end
       end
