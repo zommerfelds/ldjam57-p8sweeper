@@ -10,6 +10,12 @@ EMPTY_FIELD = 0
 SOLID_FIELD = 1
 MINE_FIELD = 2
 
+PLAYING = 0
+GAME_OVER = 1
+WIN = 2
+
+win_state = 0
+
 -- Initialize the grid
 grid = {}
 for i = 1, GRID_WIDTH do
@@ -159,27 +165,38 @@ function _init()
   poke(0x5f2d, 1)
 end
 
+function check_win_conditions()
+  if win_state != PLAYING then
+    return -- already won or lost
+  end
+  for i = 1, GRID_WIDTH do
+    if visibility[i][GRID_HEIGHT] then
+      win_state = WIN
+      return
+    end
+  end
+end
+
 function _update()
-  -- Get the current mouse button state
+  if win_state != PLAYING then return end
+
   local mouse_state = stat(34)
   local mx, my = stat(32), stat(33)
-  -- Get mouse x and y positions
   local gx, gy = mouse_to_grid(mx, my)
 
   -- Left click
   if mouse_state == 1 then
-    -- and prev_mouse_state == 0 then
     if gx and gy then
       printh("Mouse clicked on grid: (" .. gx .. ", " .. gy .. ")", "mylog.txt")
-      flags[gx][gy] = false -- Remove flag if it was set
+      flags[gx][gy] = false
       -- Check if there is a directly adjacent uncovered cell (only vertical and horizontal)
       local can_uncover = false
-      for _, offset in ipairs({{-1, 0}, {1, 0}, {0, -1}, {0, 1}}) do
+      for _, offset in ipairs({ { -1, 0 }, { 1, 0 }, { 0, -1 }, { 0, 1 } }) do
         local nx, ny = gx + offset[1], gy + offset[2]
         if nx >= 1 and nx <= GRID_WIDTH and ny >= 1 and ny <= GRID_HEIGHT then
           if visibility[nx][ny] then
-        can_uncover = true
-        break
+            can_uncover = true
+            break
           end
         end
       end
@@ -188,8 +205,7 @@ function _update()
         visibility[gx][gy] = true -- Uncover the clicked cell
       end
       if grid[gx][gy] == MINE_FIELD then
-        -- TODO: Game over logic here (e.g., show game over screen)
-        log("Game Over! You clicked on a mine!")
+        win_state = GAME_OVER
       end
     end
   end
@@ -202,8 +218,12 @@ function _update()
     end
   end
 
-  -- Update the previous mouse state
   prev_mouse_state = mouse_state
+
+  check_win_conditions()
+  if win_state_time == nil then
+    win_state_time = time()
+  end
 end
 
 function _draw()
@@ -234,7 +254,85 @@ function _draw()
         end
       end
     end
+
+    local blink = ((time() - win_state_time) * 3) % 2 < 1.2 -- Toggle visibility every 0.5 seconds
+    if win_state == WIN and blink then
+      obprint("you win!", 34, 55, 7, 0, 2)
+    elseif win_state == GAME_OVER and blink then
+      obprint("game over!", 25, 55, 7, 0, 2)
+    end
   end
 
   draw_mouse_sprite()
+end
+
+-- from https://www.lexaloffle.com/bbs/?tid=29612
+function bprint(str, x, y, c, scale)
+  pal()
+  _str_to_sprite_sheet(str)
+
+  local w = #str * 4
+  local h = 5
+  pal(7, c)
+  palt(0, true)
+
+  sspr(0, 0, w, h, x, y, w * scale, h * scale)
+  pal()
+
+  _restore_sprites_from_usermem()
+  palt(0B0000000100000000)
+end
+
+function obprint(str, x, y, c, co, scale)
+  pal()
+  _str_to_sprite_sheet(str)
+
+  local w = #str * 4
+  local h = 5
+  palt(0, true)
+
+  pal(7, co)
+  for xx = -1, 1, 1 do
+    for yy = -1, 1, 1 do
+      sspr(0, 0, w, h, x + xx, y + yy, w * scale, h * scale)
+    end
+  end
+
+  pal(7, c)
+  sspr(0, 0, w, h, x, y, w * scale, h * scale)
+
+  pal()
+
+  _restore_sprites_from_usermem()
+
+  palt(0B0000000100000000)
+end
+
+function _str_to_sprite_sheet(str)
+  _copy_sprites_to_usermem()
+
+  _black_out_sprite_row()
+  set_sprite_target()
+  print(str, 0, 0, 7)
+  set_screen_target()
+end
+
+function set_sprite_target()
+  poke(0x5f55, 0x00)
+end
+
+function set_screen_target()
+  poke(0x5f55, 0x60)
+end
+
+function _copy_sprites_to_usermem()
+  memcpy(0x4300, 0x0, 0x0200)
+end
+
+function _black_out_sprite_row()
+  memset(0x0, 0, 0x0200)
+end
+
+function _restore_sprites_from_usermem()
+  memcpy(0x0, 0x4300, 0x0200)
 end
