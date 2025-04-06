@@ -172,7 +172,21 @@ function _update()
     if gx and gy then
       printh("Mouse clicked on grid: (" .. gx .. ", " .. gy .. ")", "mylog.txt")
       flags[gx][gy] = false -- Remove flag if it was set
-      visibility[gx][gy] = true -- Uncover the clicked cell
+      -- Check if there is a directly adjacent uncovered cell (only vertical and horizontal)
+      local can_uncover = false
+      for _, offset in ipairs({{-1, 0}, {1, 0}, {0, -1}, {0, 1}}) do
+        local nx, ny = gx + offset[1], gy + offset[2]
+        if nx >= 1 and nx <= GRID_WIDTH and ny >= 1 and ny <= GRID_HEIGHT then
+          if visibility[nx][ny] then
+        can_uncover = true
+        break
+          end
+        end
+      end
+
+      if can_uncover then
+        visibility[gx][gy] = true -- Uncover the clicked cell
+      end
       if grid[gx][gy] == MINE_FIELD then
         -- TODO: Game over logic here (e.g., show game over screen)
         log("Game Over! You clicked on a mine!")
