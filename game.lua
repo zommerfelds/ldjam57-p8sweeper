@@ -61,7 +61,7 @@ function check_win_conditions()
     return -- already won or lost
   end
   for i = 1, GRID_WIDTH do
-    if visibility[i][GRID_HEIGHT] then
+    if grid[i][GRID_HEIGHT] == EMPTY_FIELD and visibility[i][GRID_HEIGHT] then
       win_state = WIN
       return
     end
@@ -95,13 +95,13 @@ function _update()
         visibility[gx][gy] = true -- Uncover the clicked cell
         if grid[gx][gy] == MINE_FIELD then
           win_state = GAME_OVER
-            for x = 1, GRID_WIDTH do
+          for x = 1, GRID_WIDTH do
             for y = 1, GRID_HEIGHT do
               if grid[x][y] == MINE_FIELD then
-              visibility[x][y] = true
+                visibility[x][y] = true
               end
             end
-            end
+          end
         end
       end
     end
@@ -124,43 +124,97 @@ end
 
 function _draw()
   cls(1)
+  rectfill(0, 0, 127, 127, 4)
   rectfill(GRID_OFFSET_X, GRID_OFFSET_Y, GRID_OFFSET_X + GRID_WIDTH * CELL_WIDTH, GRID_OFFSET_Y + GRID_HEIGHT * CELL_HEIGHT, 15)
-  for i = 1, GRID_WIDTH + 1 do
+
+  --[[for i = 1, GRID_WIDTH + 1 do
     local x = GRID_OFFSET_X + (i - 1) * CELL_WIDTH
     for j = 1, GRID_HEIGHT + 1 do
       local y = GRID_OFFSET_Y + (j - 1) * CELL_HEIGHT
-      line(x, GRID_OFFSET_Y, x, GRID_OFFSET_Y + CELL_HEIGHT * GRID_HEIGHT, 5) -- vertical lines
-      line(GRID_OFFSET_X, y, GRID_OFFSET_X + CELL_WIDTH * GRID_WIDTH, y, 5) -- horizontal lines
-      if i <= GRID_WIDTH and j <= GRID_HEIGHT then
-        --if path[i][j] then
-        --  rectfill(x, y, x + CELL_WIDTH, y + CELL_HEIGHT, 6)
-        --end
+      --line(x, GRID_OFFSET_Y, x, GRID_OFFSET_Y + CELL_HEIGHT * GRID_HEIGHT, 9) -- vertical lines
+      --line(GRID_OFFSET_X, y, GRID_OFFSET_X + CELL_WIDTH * GRID_WIDTH, y, 9) -- horizontal lines
+    end
+  end]]
+  for i = 1, GRID_WIDTH do
+    local x = GRID_OFFSET_X + (i - 1) * CELL_WIDTH
+    for j = 1, GRID_HEIGHT do
+      local y = GRID_OFFSET_Y + (j - 1) * CELL_HEIGHT
+      -- Visualize the generated path to the goal.
+      if path[i][j] then
+        rectfill(x, y, x + CELL_WIDTH, y + CELL_HEIGHT, 6)
+      end
 
-        if grid[i][j] == SOLID_FIELD then
-          spr(17, x + 1, y + 1)
-        else
-          if visibility[i][j] then
-            if grid[i][j] == MINE_FIELD then
-              spr(16, x + 1, y + 1)
-            else
-              draw_number(i, j, neighbor_counts[i][j])
-            end
+      if grid[i][j] == SOLID_FIELD then
+        -- rect(x, y, x + CELL_WIDTH, y + CELL_HEIGHT, 0)
+        spr(17, x + 1, y + 1, 1, 1, flipped[i][j].x, flipped[i][j].y)
+      else
+        if visibility[i][j] then
+          if grid[i][j] == MINE_FIELD then
+            spr(16, x + 1, y + 1)
           else
-            rectfill(x + 1, y + 1, x + CELL_WIDTH - 1, y + CELL_HEIGHT - 1, 4)
-            if flags[i][j] then
-              spr(18, x + 1, y + 1) -- Draw flag sprite
-            end
+            draw_number(i, j, neighbor_counts[i][j])
+          end
+        else
+          rectfill(x, y, x + CELL_WIDTH, y + CELL_HEIGHT, 4)
+          if flags[i][j] then
+            spr(18, x + 1, y + 1) -- Draw flag sprite
           end
         end
       end
     end
+  end
 
-    local blink = ((time() - win_state_time) * 3) % 2 < 1.2 -- Toggle visibility every 0.5 seconds
-    if win_state == WIN and blink then
-      obprint("you win!", 34, 55, 7, 0, 2)
-    elseif win_state == GAME_OVER and blink then
-      obprint("game over!", 25, 55, 7, 0, 2)
+  for i = 1, GRID_WIDTH do
+    local x = GRID_OFFSET_X + (i - 1) * CELL_WIDTH
+    for j = 1, GRID_HEIGHT do
+      local y = GRID_OFFSET_Y + (j - 1) * CELL_HEIGHT
+
+      local visible = visibility[i][j]
+      local is_rock = grid[i][j] == SOLID_FIELD
+
+      for _, offset in ipairs({ { -1, 0 }, { 0, -1 } }) do
+        local ni, nj = i + offset[1], j + offset[2]
+        if ni >= 1 and ni <= GRID_WIDTH and nj >= 1 and nj <= GRID_HEIGHT then
+          local visible_neighbor = visibility[ni][nj]
+          local is_rock_neigbor = grid[ni][nj] == SOLID_FIELD
+
+          local x1 = x
+          local y1 = y
+          local x2 = x1
+          if nj != j then
+            x1 += 1
+            x2 += CELL_WIDTH - 1
+          end
+          local y2 = y
+          if ni != i then
+            y1 += 1
+            y2 += CELL_WIDTH - 1
+          end
+
+          -- Draw a line between the two cells
+          if is_rock and is_rock_neigbor then
+            -- skip (keep continuous rock)
+          elseif visible != visible_neighbor or is_rock != is_rock_neigbor then
+            line(x1, y1, x2, y2, 0)
+          elseif (visible or visible_neighbor) then
+            line(x1, y1, x2, y2, 9)
+          end
+        end
+      end
     end
+  end
+
+  line(GRID_OFFSET_X, GRID_OFFSET_Y, GRID_OFFSET_X, GRID_OFFSET_Y + CELL_HEIGHT * GRID_HEIGHT, 9)
+  line(GRID_OFFSET_X + CELL_WIDTH * GRID_WIDTH, GRID_OFFSET_Y, GRID_OFFSET_X + CELL_WIDTH * GRID_WIDTH, GRID_OFFSET_Y + CELL_HEIGHT * GRID_HEIGHT, 9)
+  line(GRID_OFFSET_X, GRID_OFFSET_Y, GRID_OFFSET_X + CELL_WIDTH * GRID_WIDTH, GRID_OFFSET_Y, 9)
+  line(GRID_OFFSET_X, GRID_OFFSET_Y + CELL_HEIGHT * GRID_HEIGHT, GRID_OFFSET_X + CELL_WIDTH * GRID_WIDTH, GRID_OFFSET_Y + CELL_HEIGHT * GRID_HEIGHT, 9)
+
+  local blink = ((time() - win_state_time) * 3) % 2 < 1.2
+  -- Toggle visibility every 0.5 seconds
+  if win_state == WIN and blink then
+    obprint("you win!", 34, 55, 7, 0, 2)
+  elseif win_state == GAME_OVER and blink then
+    obprint("game over!", 25, 55, 7, 0, 2)
   end
 
   draw_mouse_sprite()

@@ -13,16 +13,19 @@ grid = {}
 visibility = {}
 flags = {}
 path = {}
+flipped = {}
 for i = 1, GRID_WIDTH do
     grid[i] = {}
     visibility[i] = {}
     flags[i] = {}
     path[i] = {}
+    flipped[i] = {}
     for j = 1, GRID_HEIGHT do
         grid[i][j] = EMPTY_FIELD -- Default all fields to empty
-        visibility[i][j] = false -- Default all fields to covered
+        visibility[i][j] = true -- Default all fields to covered
         flags[i][j] = false -- Default all fields to unflagged
         path[i][j] = false -- Default all fields to not in path
+        flipped[i][j] = { x = rnd() > 0.5, y = rnd() > 0.5 } -- Randomize x and y as booleans
     end
 end
 
@@ -62,7 +65,7 @@ function place_random_mines(grid, mine_count)
     end
 end
 
-place_random_mines(grid, 35)
+place_random_mines(grid, 40)
 
 function place_random_solids(grid, solid_count)
     for _ = 1, solid_count do
@@ -72,6 +75,7 @@ function place_random_solids(grid, solid_count)
             y = flr(rnd(GRID_HEIGHT)) + 1
         until grid[x][y] == EMPTY_FIELD and not path[x][y]
         grid[x][y] = SOLID_FIELD
+        visibility[x][y] = true
     end
 end
 
