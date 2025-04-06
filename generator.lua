@@ -1,12 +1,3 @@
-GRID_WIDTH = 13
-GRID_HEIGHT = 13
-CELL_WIDTH = 8
-CELL_HEIGHT = 8
-GRID_OFFSET_X = (128 - GRID_WIDTH * CELL_WIDTH - 1) / 2
-GRID_OFFSET_Y = (128 - GRID_HEIGHT * CELL_HEIGHT - 1) / 2
-START_X = flr((GRID_WIDTH + 1) / 2)
-START_Y = 1
-
 EMPTY_FIELD = 0
 SOLID_FIELD = 1
 MINE_FIELD = 2
@@ -122,10 +113,19 @@ function calculate_neighbors(grid)
     return neighbors
 end
 
-function generate_level()
+function generate_level(level)
+    GRID_WIDTH = ({ 7, 7, 9, 9, 11, 11, 13, 13, 14 })[level]
+    GRID_HEIGHT = ({ 7, 8, 9, 10, 11, 12, 13, 13, 13 })[level]
+    CELL_WIDTH = 8
+    CELL_HEIGHT = 8
+    GRID_OFFSET_X = (128 - GRID_WIDTH * CELL_WIDTH - 1) / 2
+    GRID_OFFSET_Y = (128 - GRID_HEIGHT * CELL_HEIGHT - 1) / 2
+    START_X = flr((GRID_WIDTH + 1) / 2)
+    START_Y = 1
+
     reset_grid()
     find_random_path(grid)
-    place_random_mines(grid, 45)
-    place_random_solids(grid, 20)
+    place_random_mines(grid, GRID_WIDTH * GRID_HEIGHT * 0.26)
+    place_random_solids(grid, GRID_WIDTH * GRID_HEIGHT * 0.12)
     neighbor_counts = calculate_neighbors(grid)
 end

@@ -3,6 +3,8 @@ PLAYING = 0
 GAME_OVER = 1
 WIN = 2
 
+MAX_LEVEL = 8
+
 function draw_number(grid_x, grid_y, number)
     local fnumber = flr(number)
     local x = GRID_OFFSET_X + (grid_x - 1) * CELL_WIDTH + 3
@@ -41,7 +43,7 @@ function init_level(opt_depth)
     end
 
     if scene == SCENE_LEVEL then
-        generate_level()
+        generate_level(depth)
     end
 end
 
@@ -68,7 +70,11 @@ function update_level()
         return
     elseif win_state == WIN then
         if mouse_state == 1 and my >= 118 then
-            init_level(depth + 1)
+            if depth < MAX_LEVEL then
+                init_level(depth + 1)
+            else
+                depth += 1
+            end
         end
         return
     end
@@ -125,7 +131,7 @@ end
 function draw_level()
     cls(1)
     rectfill(0, 0, 127, 127, 4)
-    print("depth: " .. depth, GRID_OFFSET_X, 3, 15)
+    print("depth: " .. depth, 3, 3, 15)
 
     rectfill(GRID_OFFSET_X, GRID_OFFSET_Y, GRID_OFFSET_X + GRID_WIDTH * CELL_WIDTH, GRID_OFFSET_Y + GRID_HEIGHT * CELL_HEIGHT, 15)
     rectfill(
@@ -219,13 +225,18 @@ function draw_level()
     local blink = ((time() - win_state_time) * 3) % 2 < 1.2
     -- Toggle visibility every 0.5 seconds
     if win_state == WIN and blink then
-        obprint("nice", 48, 55, 7, 0, 2)
-        obprint("keep digging!", 14, 75, 7, 0, 2)
+        if depth <= MAX_LEVEL then
+            obprint("nice", 48, 55, 7, 0, 2)
+            obprint("keep digging!", 14, 75, 7, 0, 2)
+        else
+            obprint("you've done it!", 20, 55, 7, 0, 2)
+            obprint("you've reached the end!", 10, 75, 7, 0, 2)
+        end
     elseif win_state == GAME_OVER and blink then
         obprint("game over!", 25, 55, 7, 0, 2)
     end
 
-    if win_state == WIN then
+    if win_state == WIN and depth <= MAX_LEVEL then
         obprint("click here to continue", 20, 120, 0, 7, 1)
     elseif win_state == GAME_OVER then
         obprint("click here to restart", 20, 120, 0, 7, 1)
