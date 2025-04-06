@@ -12,13 +12,8 @@ jobs:
       - uses: actions/checkout@v3
       - name: Install PICO-8
         run: |
-          # Download PICO-8
-          wget https://www.lexaloffle.com/dl/pico8_linux.zip
-          # Extract PICO-8
-          unzip pico8_linux.zip
-          # Set permissions
-          chmod +x pico8
-          # Add to PATH (optional, but recommended)
-          echo "PATH=$PATH:/path/to/pico8_linux" >> $GITHUB_PATH
+          wget https://raw.githubusercontent.com/robert5800/pico-8-autoinstall/main/install
+          chmod +x install
+          ./install
       - name: Run PICO-8
         run: pico8 -export export/game.html p8sweeper.p8
