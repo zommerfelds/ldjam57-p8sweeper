@@ -11,27 +11,15 @@ MINE_FIELD = 2
 
 -- Initialize the grid
 grid = {}
-for i = 1, GRID_WIDTH do
-    grid[i] = {}
-    for j = 1, GRID_HEIGHT do
-        grid[i][j] = EMPTY_FIELD -- Default all fields to empty
-    end
-end
-
--- Initialize the visibility state of the grid
 visibility = {}
-for i = 1, GRID_WIDTH do
-    visibility[i] = {}
-    for j = 1, GRID_HEIGHT do
-        visibility[i][j] = false -- Default all fields to covered (not uncovered)
-    end
-end
-
--- Initialize the flags state of the grid
 flags = {}
 for i = 1, GRID_WIDTH do
+    grid[i] = {}
+    visibility[i] = {}
     flags[i] = {}
     for j = 1, GRID_HEIGHT do
+        grid[i][j] = EMPTY_FIELD -- Default all fields to empty
+        visibility[i][j] = false -- Default all fields to covered (not uncovered)
         flags[i][j] = false -- Default all fields to unflagged
     end
 end
@@ -49,7 +37,7 @@ function place_random_mines(grid, mine_count)
 end
 
 -- Place 10 random mines
-place_random_mines(grid, 30)
+place_random_mines(grid, 50)
 
 -- Uncover a 3x3 area at the top middle of the grid
 local start_x = flr(GRID_WIDTH / 2)
