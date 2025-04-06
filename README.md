@@ -13,10 +13,11 @@ todo: screenshot
 - [x] Flag mines
 - [x] Win and lose condition
 - [x] Make puzzle generation better (solvable)
-- [ ] Better graphics like mockup (e.g. don't draw grid in uncovered land)
+- [x] Better graphics like mockup (e.g. don't draw grid in uncovered land)
 - [ ] Sound
 - [ ] Levels (depth indicator)
 - [ ] Exploration animation
+- [ ] Better tiles
 - [ ] Story
 
 ## Dev notes
