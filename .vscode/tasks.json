@@ -16,7 +16,7 @@
       "command": "C:\\Program Files (x86)\\PICO-8\\pico8.exe",
       "args": [
         "-export",
-        "${workspaceFolder}\\export\\game.html",
+        "${workspaceFolder}\\export\\index.html",
         "${workspaceFolder}\\p8sweeper.p8"
       ],
       "problemMatcher": []
