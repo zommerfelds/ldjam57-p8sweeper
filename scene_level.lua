@@ -129,17 +129,17 @@ function draw_level()
 
     rectfill(GRID_OFFSET_X, GRID_OFFSET_Y, GRID_OFFSET_X + GRID_WIDTH * CELL_WIDTH, GRID_OFFSET_Y + GRID_HEIGHT * CELL_HEIGHT, 15)
     rectfill(
-        GRID_OFFSET_X + CELL_WIDTH * (start_x - 2), 0,
-        GRID_OFFSET_X + CELL_WIDTH * (start_x + 1), GRID_OFFSET_Y,
+        GRID_OFFSET_X + CELL_WIDTH * (START_X - 2), 0,
+        GRID_OFFSET_X + CELL_WIDTH * (START_X + 1), GRID_OFFSET_Y,
         15
     )
     line(
-        GRID_OFFSET_X + CELL_WIDTH * (start_x - 2), 0,
-        GRID_OFFSET_X + CELL_WIDTH * (start_x - 2), GRID_OFFSET_Y, 0
+        GRID_OFFSET_X + CELL_WIDTH * (START_X - 2), 0,
+        GRID_OFFSET_X + CELL_WIDTH * (START_X - 2), GRID_OFFSET_Y, 0
     )
     line(
-        GRID_OFFSET_X + CELL_WIDTH * (start_x + 1), 0,
-        GRID_OFFSET_X + CELL_WIDTH * (start_x + 1), GRID_OFFSET_Y, 0
+        GRID_OFFSET_X + CELL_WIDTH * (START_X + 1), 0,
+        GRID_OFFSET_X + CELL_WIDTH * (START_X + 1), GRID_OFFSET_Y, 0
     )
 
     for i = 1, GRID_WIDTH do
@@ -147,9 +147,9 @@ function draw_level()
         for j = 1, GRID_HEIGHT do
             local y = GRID_OFFSET_Y + (j - 1) * CELL_HEIGHT
             -- Visualize the generated path to the goal.
-            --if path[i][j] then
-            --  rectfill(x, y, x + CELL_WIDTH, y + CELL_HEIGHT, 6)
-            --end
+            --[[if path[i][j] then
+                rectfill(x, y, x + CELL_WIDTH, y + CELL_HEIGHT, 6)
+            end--]]
 
             if grid[i][j] == SOLID_FIELD then
                 -- rect(x, y, x + CELL_WIDTH, y + CELL_HEIGHT, 0)
@@ -219,7 +219,8 @@ function draw_level()
     local blink = ((time() - win_state_time) * 3) % 2 < 1.2
     -- Toggle visibility every 0.5 seconds
     if win_state == WIN and blink then
-        obprint("nice, keep digging!", 5, 55, 7, 0, 2)
+        obprint("nice", 48, 55, 7, 0, 2)
+        obprint("keep digging!", 14, 75, 7, 0, 2)
     elseif win_state == GAME_OVER and blink then
         obprint("game over!", 25, 55, 7, 0, 2)
     end

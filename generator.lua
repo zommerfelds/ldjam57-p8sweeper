@@ -4,6 +4,8 @@ CELL_WIDTH = 8
 CELL_HEIGHT = 8
 GRID_OFFSET_X = (128 - GRID_WIDTH * CELL_WIDTH - 1) / 2
 GRID_OFFSET_Y = (128 - GRID_HEIGHT * CELL_HEIGHT - 1) / 2
+START_X = flr((GRID_WIDTH + 1) / 2)
+START_Y = 1
 
 EMPTY_FIELD = 0
 SOLID_FIELD = 1
@@ -32,22 +34,30 @@ function reset_grid()
     end
 end
 
-local start_x = flr((GRID_WIDTH + 1) / 2)
-local start_y = 1
-
 function is_in_start_area(x, y)
-    return (x >= start_x - 1 and x <= start_x + 1)
-            and (y >= start_y and y <= start_y + 1)
+    return (x >= START_X - 1 and x <= START_X + 1)
+            and (y >= START_Y and y <= START_Y + 1)
 end
 
 function find_random_path(grid)
-    local x, y = start_x, start_y
+    local x, y = START_X, START_Y
     path[x][y] = true
     while y < GRID_HEIGHT do
         local moves = {}
-        if x > 1 and not path[x + 1][y] then add(moves, { x - 1, y }) end -- Left
-        if x < GRID_WIDTH and not path[x - 1][y] then add(moves, { x + 1, y }) end -- Right
-        if y < GRID_HEIGHT then add(moves, { x, y + 1 }) end -- Down
+        -- Left
+        if x > 1 and not path[x - 1][y] and not path[x - 1][y - 1] then
+            add(moves, { x - 1, y }) -- more likely to go left
+            add(moves, { x - 1, y })
+        end
+        -- Right
+        if x < GRID_WIDTH and not path[x + 1][y] and not path[x + 1][y - 1] then
+            add(moves, { x + 1, y }) -- more likely to go right
+            add(moves, { x + 1, y })
+        end
+        -- Down
+        if y < GRID_HEIGHT then
+            add(moves, { x, y + 1 })
+        end
 
         local next_move = moves[flr(rnd(#moves)) + 1]
         x, y = next_move[1], next_move[2]

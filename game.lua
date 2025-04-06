@@ -1,6 +1,7 @@
 SCENE_MENU = 0
 SCENE_LEVEL = 1
 scene = SCENE_MENU
+--scene = SCENE_LEVEL
 
 if stat(6) == 'debug' then
   write_to_file = true
