@@ -47,6 +47,7 @@ function init_level(opt_depth)
     win_state_time = 0
     win_state = PLAYING
     prev_mouse_state = 0
+    opening_time = time()
     if opt_depth then
         depth = opt_depth
     else
@@ -64,7 +65,7 @@ function init_level(opt_depth)
         end
     end
     for x = GRID_OFFSET_X + CELL_WIDTH * (START_X - 2), GRID_OFFSET_X + CELL_WIDTH * START_X, CELL_WIDTH do
-        for y = 0, GRID_OFFSET_Y, CELL_HEIGHT do
+        for y = GRID_OFFSET_Y % CELL_HEIGHT - CELL_HEIGHT, GRID_OFFSET_Y, CELL_HEIGHT do
             random_background[x .. y] = get_background_tile_empty(rnd())
         end
     end
@@ -159,7 +160,6 @@ end
 
 function draw_level()
     cls(1)
-    -- rectfill(0, 0, 127, 127, 4)
 
     -- Draw the background
     for x = 0, 127, CELL_WIDTH do
@@ -170,18 +170,17 @@ function draw_level()
 
     print("depth: " .. depth, 3, 3, 15)
 
-    -- rectfill(GRID_OFFSET_X, GRID_OFFSET_Y, GRID_OFFSET_X + GRID_WIDTH * CELL_WIDTH, GRID_OFFSET_Y + GRID_HEIGHT * CELL_HEIGHT, 15)
-
-    --[[rectfill(
-        GRID_OFFSET_X + CELL_WIDTH * (START_X - 2), 0,
-        GRID_OFFSET_X + CELL_WIDTH * (START_X + 1), GRID_OFFSET_Y,
-        15
-    )]]
+    -- Draw the beginning of the hole
     for x = GRID_OFFSET_X + CELL_WIDTH * (START_X - 2), GRID_OFFSET_X + CELL_WIDTH * START_X, CELL_WIDTH do
-        for y = 0, GRID_OFFSET_Y, CELL_HEIGHT do
+        for y = GRID_OFFSET_Y % CELL_HEIGHT - CELL_HEIGHT, min(GRID_OFFSET_Y, (time() - opening_time) * 20), CELL_HEIGHT do
             spr(random_background[x .. y], x, y)
         end
     end
+
+    if GRID_OFFSET_Y > (time() - opening_time) * 20 then
+        return
+    end
+
     line(
         GRID_OFFSET_X + CELL_WIDTH * (START_X - 2), 0,
         GRID_OFFSET_X + CELL_WIDTH * (START_X - 2), GRID_OFFSET_Y, 0
