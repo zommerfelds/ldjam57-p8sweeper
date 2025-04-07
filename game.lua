@@ -1,5 +1,6 @@
 SCENE_MENU = 0
 SCENE_LEVEL = 1
+SCENE_STORY = 2
 
 if stat(6) == 'debug' then
   write_to_file = true
@@ -28,6 +29,8 @@ function _init()
 
   -- init_level()
   init_menu()
+  --depth = 1
+  --init_story()
 end
 
 function _update()
@@ -35,6 +38,8 @@ function _update()
     update_menu()
   elseif scene == SCENE_LEVEL then
     update_level()
+  elseif scene == SCENE_STORY then
+    update_story()
   end
 end
 
@@ -43,6 +48,8 @@ function _draw()
     draw_menu()
   elseif scene == SCENE_LEVEL then
     draw_level()
+  elseif scene == SCENE_STORY then
+    draw_story()
   end
 
   draw_mouse_sprite()

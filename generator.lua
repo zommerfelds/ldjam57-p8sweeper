@@ -77,7 +77,7 @@ function place_random_solids(grid, solid_count)
         repeat
             x = flr(rnd(GRID_WIDTH)) + 1
             y = flr(rnd(GRID_HEIGHT)) + 1
-        until grid[x][y] == EMPTY_FIELD and not path[x][y]
+        until grid[x][y] == EMPTY_FIELD and not path[x][y] and not is_in_start_area(x, y)
         grid[x][y] = SOLID_FIELD
         -- visibility[x][y] = true
     end

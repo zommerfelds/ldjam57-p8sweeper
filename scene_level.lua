@@ -104,11 +104,7 @@ function update_level()
         return
     elseif win_state == WIN then
         if mouse_state == 1 and my >= 118 then
-            if depth <= MAX_LEVEL then
-                init_level(depth + 1)
-            else
-                depth += 1
-            end
+            init_story()
         end
         return
     elseif depth == MAX_LEVEL and visibility[3][4] then
@@ -122,7 +118,7 @@ function update_level()
 
     -- Left click
     if mouse_state == 1 then
-        if gx and gy and not visibility[gx][gy] then
+        if gx and gy and not visibility[gx][gy] and grid[gx][gy] != SOLID_FIELD then
             flags[gx][gy] = false
             -- Check if there is a directly adjacent uncovered cell (only vertical and horizontal)
             local can_uncover = false
@@ -286,8 +282,8 @@ function draw_level()
     -- Toggle visibility every 0.5 seconds
     if win_state == WIN and blink then
         --if depth < MAX_LEVEL then
-        obprint("nice", 48, 55, 7, 0, 2)
-        obprint("keep digging!", 14, 75, 7, 0, 2)
+        obprint("well done", 29, 55, 7, 0, 2)
+        --obprint("keep digging!", 14, 75, 7, 0, 2)
         --[[else
             obprint("you've done it!", 12, 55, 7, 0, 2)
             obprint("the end...", 30, 75, 7, 0, 2)
