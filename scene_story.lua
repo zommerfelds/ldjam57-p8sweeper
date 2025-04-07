@@ -38,7 +38,7 @@ story = {
     "you felt a tremor in the\n\ndistance.\n\ndust rained down.\n\nescape felt distant.",
     "a chilling whisper entered\n\nyour mind.\n\ngoing back is no option.",
     "a small chamber appears in\n\nfront of you.\n\ncould this be what you\nseek?",
-    "home felt strange.\n\nwhat if the number was\n\nwrong? the mine...\n\nexplode it?\n\nshould you have?"
+    "home felt strange.\n\nthe mine... explode it?\n\nshould you have...?\n\nafter some sleep you see\nthe world. it's beatiful.\n\nno more mines."
 }
 
 function draw_story()

@@ -109,7 +109,9 @@ function update_level()
         return
     elseif depth == MAX_LEVEL and visibility[3][4] then
         if mouse_state == 1 and my >= 118 then
-            init_menu()
+            -- At the end of the game you can't will, so as soon as the player sees the last mine
+            -- this click goes to the end story
+            init_story()
             return
         end
     end

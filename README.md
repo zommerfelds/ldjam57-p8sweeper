@@ -19,7 +19,7 @@ todo: screenshot
 - [x] Sound
 - [x] Exploration animation
 - [x] Better tiles
-- [ ] Story
+- [x] Story
 - [ ] Manual in README
 - [ ] Music
 
