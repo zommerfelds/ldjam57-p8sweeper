@@ -90,7 +90,7 @@ function update_level()
             for _, offset in ipairs({ { -1, 0 }, { 1, 0 }, { 0, -1 }, { 0, 1 } }) do
                 local nx, ny = gx + offset[1], gy + offset[2]
                 if nx >= 1 and nx <= GRID_WIDTH and ny >= 1 and ny <= GRID_HEIGHT then
-                    if visibility[nx][ny] then
+                    if visibility[nx][ny] and grid[nx][ny] == EMPTY_FIELD then
                         can_uncover = true
                         break
                     end
@@ -169,9 +169,9 @@ function draw_level()
                     end
                 else
                     rectfill(x, y, x + CELL_WIDTH, y + CELL_HEIGHT, 4)
-                    if flags[i][j] then
-                        spr(18, x + 1, y + 1) -- Draw flag sprite
-                    end
+                end
+                if flags[i][j] then
+                    spr(18, x + 1, y + 1) -- Draw flag sprite
                 end
             end
         end
@@ -229,8 +229,8 @@ function draw_level()
             obprint("nice", 48, 55, 7, 0, 2)
             obprint("keep digging!", 14, 75, 7, 0, 2)
         else
-            obprint("you've done it!", 20, 55, 7, 0, 2)
-            obprint("you've reached the end!", 10, 75, 7, 0, 2)
+            obprint("you've done it!", 12, 55, 7, 0, 2)
+            obprint("the end...", 30, 75, 7, 0, 2)
         end
     elseif win_state == GAME_OVER and blink then
         obprint("game over!", 25, 55, 7, 0, 2)
