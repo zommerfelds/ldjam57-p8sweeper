@@ -36,6 +36,10 @@ function get_background_tile_full(rand)
     return 19 + min(rand * 20, 9)
 end
 
+function get_background_tile_empty(rand)
+    return 35 + min(rand * 8, 4)
+end
+
 function init_level(opt_depth)
     scene = SCENE_LEVEL
     sfx(0)
@@ -57,6 +61,11 @@ function init_level(opt_depth)
     for x = 0, 127, CELL_WIDTH do
         for y = 0, 127, CELL_HEIGHT do
             random_background[x .. y] = get_background_tile_full(rnd())
+        end
+    end
+    for x = GRID_OFFSET_X + CELL_WIDTH * (START_X - 2), GRID_OFFSET_X + CELL_WIDTH * START_X, CELL_WIDTH do
+        for y = 0, GRID_OFFSET_Y, CELL_HEIGHT do
+            random_background[x .. y] = get_background_tile_empty(rnd())
         end
     end
 end
@@ -161,12 +170,18 @@ function draw_level()
 
     print("depth: " .. depth, 3, 3, 15)
 
-    rectfill(GRID_OFFSET_X, GRID_OFFSET_Y, GRID_OFFSET_X + GRID_WIDTH * CELL_WIDTH, GRID_OFFSET_Y + GRID_HEIGHT * CELL_HEIGHT, 15)
-    rectfill(
+    -- rectfill(GRID_OFFSET_X, GRID_OFFSET_Y, GRID_OFFSET_X + GRID_WIDTH * CELL_WIDTH, GRID_OFFSET_Y + GRID_HEIGHT * CELL_HEIGHT, 15)
+
+    --[[rectfill(
         GRID_OFFSET_X + CELL_WIDTH * (START_X - 2), 0,
         GRID_OFFSET_X + CELL_WIDTH * (START_X + 1), GRID_OFFSET_Y,
         15
-    )
+    )]]
+    for x = GRID_OFFSET_X + CELL_WIDTH * (START_X - 2), GRID_OFFSET_X + CELL_WIDTH * START_X, CELL_WIDTH do
+        for y = 0, GRID_OFFSET_Y, CELL_HEIGHT do
+            spr(random_background[x .. y], x, y)
+        end
+    end
     line(
         GRID_OFFSET_X + CELL_WIDTH * (START_X - 2), 0,
         GRID_OFFSET_X + CELL_WIDTH * (START_X - 2), GRID_OFFSET_Y, 0
@@ -193,6 +208,7 @@ function draw_level()
                     if grid[i][j] == MINE_FIELD then
                         spr(16, x + 1, y + 1)
                     else
+                        spr(get_background_tile_empty(rand[i][j]), x, y, 1, 1, flipped[i][j].x, flipped[i][j].y)
                         draw_number(i, j, neighbor_counts[i][j])
                     end
                 else
