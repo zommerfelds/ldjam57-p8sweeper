@@ -227,13 +227,13 @@ function draw_level()
         for j = 1, GRID_HEIGHT do
             local y = GRID_OFFSET_Y + (j - 1) * CELL_HEIGHT
 
-            local visible = visibility[i][j]
+            local explored = visibility[i][j] and grid[i][j] != MINE_FIELD
             local is_rock = grid[i][j] == SOLID_FIELD
 
             for _, offset in ipairs({ { -1, 0 }, { 0, -1 } }) do
                 local ni, nj = i + offset[1], j + offset[2]
                 if ni >= 1 and ni <= GRID_WIDTH and nj >= 1 and nj <= GRID_HEIGHT then
-                    local visible_neighbor = visibility[ni][nj]
+                    local explored_neighbor = visibility[ni][nj] and grid[ni][nj] != MINE_FIELD
                     local is_rock_neigbor = grid[ni][nj] == SOLID_FIELD
 
                     local x1 = x
@@ -252,9 +252,11 @@ function draw_level()
                     -- Draw a line between the two cells
                     if is_rock and is_rock_neigbor then
                         -- skip (keep continuous rock)
-                    elseif visible != visible_neighbor or is_rock != is_rock_neigbor then
+                    elseif explored != explored_neighbor or is_rock != is_rock_neigbor then
+                        -- black line
                         line(x1, y1, x2, y2, 0)
-                    elseif (visible or visible_neighbor) then
+                    elseif explored or explored_neighbor then
+                        -- light line
                         line(x1, y1, x2, y2, 9)
                     end
                 end

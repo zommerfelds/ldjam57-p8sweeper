@@ -32,7 +32,5 @@ function draw_menu()
                 .. "- can you reach depth 10?\n\n",
         13, 32, 0
     )
-    --print("\":\" is the same as .5,\nso 2: means 2.5", 16, 66, 0)
-    --print("see also manual", 16, 86, 0)
     obprint("click to start", 35, 110, 0, 7, 1)
 end
