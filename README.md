@@ -4,10 +4,16 @@ A [PICO-8](https://www.lexaloffle.com/pico-8.php) cartridge with a Minesweeper i
 
 👉 [Play the game online](https://zommerfelds.github.io/ldjam57-p8sweeper/) 👈
 
+Screenshots:
+
 ![](doc/p8sweeper_3.png)
 ![](doc/p8sweeper_1.png)
 ![](doc/p8sweeper_2.png)
 ![](doc/p8sweeper_4.png)
+
+GIF:
+
+![p8sweeper_6](https://github.com/user-attachments/assets/651404b1-1782-4b37-b72c-70b1ee1fd732)
 
 ## Manual
 
