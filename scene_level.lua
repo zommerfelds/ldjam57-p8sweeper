@@ -88,6 +88,15 @@ function update_level()
     local mouse_state = stat(34)
     local mx, my = stat(32), stat(33)
 
+    t = time()
+    if GRID_OFFSET_Y > (t - opening_time) * 20 then
+        -- super hacky
+        if (((t + 1 / 20 - opening_time) * 20) % CELL_HEIGHT) < (((t - opening_time) * 20) % CELL_HEIGHT) then
+            sfx(2, 1)
+        end
+        return
+    end
+
     if win_state == GAME_OVER then
         if mouse_state == 1 and my >= 118 then
             init_menu()

@@ -17,7 +17,7 @@ todo: screenshot
 - [x] Tutorial
 - [x] Levels (depth indicator) and make into actual game
 - [x] Sound
-- [ ] Exploration animation
+- [x] Exploration animation
 - [x] Better tiles
 - [ ] Story
 - [ ] Manual in README
