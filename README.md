@@ -1,10 +1,51 @@
 # P8-Sweeper (entry for Ludum Dare 57)
 
-👉 [Play the game](https://zommerfelds.github.io/ldjam57-p8sweeper/) 👈
+A [PICO-8](https://www.lexaloffle.com/pico-8.php) cartridge with a Minesweeper inspired game.
 
-todo: screenshot
+👉 [Play the game online](https://zommerfelds.github.io/ldjam57-p8sweeper/) 👈
 
-## Tasks
+![](doc/p8sweeper_3.png)
+![](doc/p8sweeper_1.png)
+![](doc/p8sweeper_2.png)
+![](doc/p8sweeper_4.png)
+
+## Manual
+
+* A number on the grid means how many mines are around that field. Diagonal mines count as half.
+
+* Notation: a `:` symbol is used in the game to mean "and a half" (+0.5)
+
+| In game | Value |
+| -------- | ------- |
+|  (no symbol) | 0 |
+| `:` | 0.50 |
+| `1` | 1 |
+| `1:` | 1.5 |
+| `2` | 2 |
+| `2:` | 2.5 |
+| `3` | 3 |
+| `3:` | 3.5 |
+| `4` | 4 |
+| `4:` | 4.5 |
+| `5` | 5 |
+
+* Solving examples:
+
+Here you can see that all of the marked fields must be empty because they touch fields with a "zero". The rightmost arrow is also empty because the `:` can only have diagonal mines close to it (otherwise it would be 1 or more).
+
+![image](https://github.com/user-attachments/assets/c4785333-4306-4c67-bda5-310de50f2751)
+
+Now in the next step you can see that the only field left for the `:` must be a mine.
+
+![image](https://github.com/user-attachments/assets/e7109731-17fb-46f9-a317-fc0c4ee6d645)
+
+Here you see that the corner `1` already has a diagonal mine, so it can't have any horizontally or vertically adjacent mines, otherwise it would be 1.5. The arrow to the right is showing how the only way to solve the `1:` is to place a mine there.
+
+![image](https://github.com/user-attachments/assets/e183e93a-3c55-4bad-82b8-ed24642b560e)
+
+## Dev notes
+
+### Tasks
 
 - [x] Draw base grid with numbers
 - [x] Mouse click
@@ -23,7 +64,7 @@ todo: screenshot
 - [ ] Manual in README
 - [ ] Music
 
-## Dev notes
+### Commands
 
 To deploy a new version: `bash deploy.sh`
 
