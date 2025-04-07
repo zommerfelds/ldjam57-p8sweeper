@@ -4,6 +4,8 @@ A [PICO-8](https://www.lexaloffle.com/pico-8.php) cartridge with a Minesweeper i
 
 👉 [Play the game online](https://zommerfelds.github.io/ldjam57-p8sweeper/) 👈
 
+Ludum Dare entry: https://ldjam.com/events/ludum-dare/57/p8-sweeper
+
 Screenshots:
 
 ![](doc/p8sweeper_3.png)
