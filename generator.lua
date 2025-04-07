@@ -125,7 +125,7 @@ function generate_level(level)
 
     reset_grid()
     find_random_path(grid)
-    place_random_mines(grid, GRID_WIDTH * GRID_HEIGHT * 0.26)
+    place_random_mines(grid, GRID_WIDTH * GRID_HEIGHT * ((level / 9) * 0.11 + 0.15))
     place_random_solids(grid, GRID_WIDTH * GRID_HEIGHT * 0.12)
     neighbor_counts = calculate_neighbors(grid)
 end
