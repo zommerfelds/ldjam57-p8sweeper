@@ -7,6 +7,7 @@ visibility = {}
 flags = {}
 path = {}
 flipped = {}
+rand = {}
 
 function reset_grid()
     for i = 1, GRID_WIDTH do
@@ -15,12 +16,15 @@ function reset_grid()
         flags[i] = {}
         path[i] = {}
         flipped[i] = {}
+        rand[i] = {}
         for j = 1, GRID_HEIGHT do
             grid[i][j] = EMPTY_FIELD -- Default all fields to empty
             visibility[i][j] = false -- Default all fields to covered
             flags[i][j] = false -- Default all fields to unflagged
             path[i][j] = false -- Default all fields to not in path
+            -- note: could remove flipped and use rand instead
             flipped[i][j] = { x = rnd() > 0.5, y = rnd() > 0.5 } -- Randomize x and y as booleans
+            rand[i][j] = rnd()
         end
     end
 end

@@ -32,6 +32,10 @@ function mouse_to_grid(mx, my)
     end
 end
 
+function get_background_tile_full(rand)
+    return 19 + min(rand * 20, 9)
+end
+
 function init_level(opt_depth)
     scene = SCENE_LEVEL
     sfx(0)
@@ -47,6 +51,13 @@ function init_level(opt_depth)
 
     if scene == SCENE_LEVEL then
         generate_level(depth)
+    end
+
+    random_background = {}
+    for x = 0, 127, CELL_WIDTH do
+        for y = 0, 127, CELL_HEIGHT do
+            random_background[x .. y] = get_background_tile_full(rnd())
+        end
     end
 end
 
@@ -139,7 +150,15 @@ end
 
 function draw_level()
     cls(1)
-    rectfill(0, 0, 127, 127, 4)
+    -- rectfill(0, 0, 127, 127, 4)
+
+    -- Draw the background
+    for x = 0, 127, CELL_WIDTH do
+        for y = 0, 127, CELL_HEIGHT do
+            spr(random_background[x .. y], x, y)
+        end
+    end
+
     print("depth: " .. depth, 3, 3, 15)
 
     rectfill(GRID_OFFSET_X, GRID_OFFSET_Y, GRID_OFFSET_X + GRID_WIDTH * CELL_WIDTH, GRID_OFFSET_Y + GRID_HEIGHT * CELL_HEIGHT, 15)
@@ -177,7 +196,8 @@ function draw_level()
                         draw_number(i, j, neighbor_counts[i][j])
                     end
                 else
-                    rectfill(x, y, x + CELL_WIDTH, y + CELL_HEIGHT, 4)
+                    --rectfill(x, y, x + CELL_WIDTH, y + CELL_HEIGHT, 4)
+                    spr(get_background_tile_full(rand[i][j]), x, y, 1, 1, flipped[i][j].x, flipped[i][j].y)
                 end
                 if flags[i][j] then
                     spr(18, x + 1, y + 1) -- Draw flag sprite
