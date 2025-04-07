@@ -33,6 +33,9 @@ function mouse_to_grid(mx, my)
 end
 
 function init_level(opt_depth)
+    scene = SCENE_LEVEL
+    sfx(0)
+
     win_state_time = 0
     win_state = PLAYING
     prev_mouse_state = 0
@@ -54,6 +57,7 @@ function check_win_conditions()
     for i = 1, GRID_WIDTH do
         if grid[i][GRID_HEIGHT] == EMPTY_FIELD and visibility[i][GRID_HEIGHT] then
             win_state = WIN
+            sfx(4)
             return
         end
     end
@@ -65,7 +69,7 @@ function update_level()
 
     if win_state == GAME_OVER then
         if mouse_state == 1 and my >= 118 then
-            scene = SCENE_MENU
+            init_menu()
         end
         return
     elseif win_state == WIN then
@@ -83,7 +87,7 @@ function update_level()
 
     -- Left click
     if mouse_state == 1 then
-        if gx and gy then
+        if gx and gy and not visibility[gx][gy] then
             flags[gx][gy] = false
             -- Check if there is a directly adjacent uncovered cell (only vertical and horizontal)
             local can_uncover = false
@@ -99,7 +103,10 @@ function update_level()
 
             if can_uncover then
                 visibility[gx][gy] = true -- Uncover the clicked cell
+
                 if grid[gx][gy] == MINE_FIELD then
+                    sfx(1)
+                    -- reveal all mines
                     win_state = GAME_OVER
                     for x = 1, GRID_WIDTH do
                         for y = 1, GRID_HEIGHT do
@@ -108,6 +115,8 @@ function update_level()
                             end
                         end
                     end
+                else
+                    sfx(2)
                 end
             end
         end

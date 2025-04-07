@@ -14,12 +14,14 @@ todo: screenshot
 - [x] Win and lose condition
 - [x] Make puzzle generation better (solvable)
 - [x] Better graphics like mockup (e.g. don't draw grid in uncovered land)
-- [ ] Tutorial
+- [x] Tutorial
 - [x] Levels (depth indicator) and make into actual game
-- [ ] Sound
+- [x] Sound
 - [ ] Exploration animation
 - [ ] Better tiles
 - [ ] Story
+- [ ] Manual in README
+- [ ] Music
 
 ## Dev notes
 

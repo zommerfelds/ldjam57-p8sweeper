@@ -1,11 +1,10 @@
 SCENE_MENU = 0
 SCENE_LEVEL = 1
-scene = SCENE_MENU
---scene = SCENE_LEVEL
 
 if stat(6) == 'debug' then
   write_to_file = true
 end
+
 function log(text)
   if write_to_file then
     printh(text, "mylog.txt")
@@ -27,9 +26,8 @@ function _init()
   -- Enable the hardware mouse cursor
   poke(0x5f2d, 1)
 
-  if scene == SCENE_LEVEL then
-    init_level()
-  end
+  -- init_level()
+  init_menu()
 end
 
 function _update()
